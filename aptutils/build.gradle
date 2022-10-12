@@ -1,0 +1,18 @@
+apply plugin: 'java'
+apply plugin: 'kotlin'
+
+tasks.withType(Javadoc) {
+    options.encoding = 'UTF-8'
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.squareup:javapoet:1.13.0'
+    implementation 'com.squareup:kotlinpoet:1.1.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.7.0"
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
