@@ -1,5 +1,6 @@
 package com.jyc.fast.result.launcher.compiler.activity
 
+import com.jyc.fast.result.launcher.compiler.activity.method.ConstantBuilder
 import com.jyc.fast.result.launcher.compiler.activity.method.LauncherCallBuilder
 import com.squareup.javapoet.*
 import javax.annotation.processing.Filer
@@ -16,7 +17,6 @@ class LauncherActivityClassBuilder(private val launcherActivityClass: LauncherAc
         const val METHOD_NAME = "init"
         const val TARGET_VARIABLE_NAME = "host"
         const val TYPE_VARIABLE_NAME = "HOST"
-        const val ANONYMOUS_CLASS_POSIX = "\$\$CallBack"
     }
 
     fun build(filer: Filer) {
@@ -31,6 +31,7 @@ class LauncherActivityClassBuilder(private val launcherActivityClass: LauncherAc
 //            .addModifiers(Modifier.FINAL)
 //            .build()
         //创建方法
+        ConstantBuilder(launcherActivityClass).build(typeBuilder)
         LauncherCallBuilder(launcherActivityClass).build(typeBuilder)
 
         //创建一个文件

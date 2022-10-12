@@ -22,7 +22,8 @@ public class MainActivity$$FastLauncherResult1<Host extends MainActivity> {
                 new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
                     @Override
                     public void onActivityResult(ActivityResult result) {
-
+                        Intent data = result.getData();
+                        int resultCode = result.getResultCode();
                     }
                 });
 

@@ -1,5 +1,6 @@
 package com.jyc.fast.result.launcher.compiler.activity.method
 
+import com.jyc.annotations.compiler.utils.cameToUnderline
 import com.jyc.annotations.compiler.utils.firstCapital
 import com.jyc.fast.result.launcher.compiler.activity.LauncherActivityClass
 import com.jyc.fast.result.launcher.compiler.activity.LauncherActivityClassBuilder.Companion.METHOD_NAME
@@ -17,10 +18,10 @@ class LauncherCallBuilder(private val launcherActivityClass: LauncherActivityCla
     IMethodBuildInterface {
 
     override fun build(typeBuilder: TypeSpec.Builder) {
-        launcherActivityClass.methodCalls.forEach { methodCall ->
+        launcherActivityClass.fields.forEach { field ->
 
             val initLauncherMethod =
-                MethodSpec.methodBuilder(METHOD_NAME + methodCall.methodKey.firstCapital())
+                MethodSpec.methodBuilder(METHOD_NAME + field.name.firstCapital())
                     .addModifiers(Modifier.PUBLIC)
                     .addParameter(
                         TypeVariableName.get(TYPE_VARIABLE_NAME),
@@ -28,11 +29,48 @@ class LauncherCallBuilder(private val launcherActivityClass: LauncherActivityCla
                     )
                     .returns(TypeName.VOID)
 
+
             //匿名内部类
             val parameter: ParameterSpec =
                 ParameterSpec.builder(ACTIVITY_RESULT.java, "result")
                     .addModifiers(Modifier.FINAL)
                     .build()
+
+            val anonymousClassMethod = MethodSpec.methodBuilder("onActivityResult")
+                .addAnnotation(Override::class.java)
+                .addModifiers(Modifier.PUBLIC)
+                .returns(TypeName.VOID)
+                .addParameter(parameter)
+                .addStatement("\$T data = result.getData()", INTENT.java)
+                .addStatement("int resultCode = result.getResultCode()")
+
+            //生成控制语句
+            launcherActivityClass.resultCodes[field.name]?.forEachIndexed { index, fastResultCodes ->
+                if (index == 0) {
+                    anonymousClassMethod.beginControlFlow(
+                        "if (resultCode == \$L)",
+                        fastResultCodes.resultCode
+                    )
+                    anonymousClassMethod.addStatement(
+                        "\$L.\$L()",
+                        TARGET_VARIABLE_NAME,
+                        fastResultCodes.methodName
+                    )
+                } else {
+                    anonymousClassMethod.nextControlFlow(
+                        "else if (resultCode == \$L)",
+                        fastResultCodes.resultCode
+                    )
+                    anonymousClassMethod.addStatement(
+                        "\$L.\$L()",
+                        TARGET_VARIABLE_NAME,
+                        fastResultCodes.methodName
+                    )
+                }
+                if ((index + 1) == launcherActivityClass.resultCodes[field.name]?.size) {
+                    anonymousClassMethod.endControlFlow()
+                }
+            }
 
             val activityResult =
                 TypeSpec.anonymousClassBuilder("")
@@ -42,20 +80,13 @@ class LauncherCallBuilder(private val launcherActivityClass: LauncherActivityCla
                             ACTIVITY_RESULT.className()
                         )
                     )
-                    .addMethod(
-                        MethodSpec.methodBuilder("onActivityResult")
-                            .addAnnotation(Override::class.java)
-                            .addModifiers(Modifier.PUBLIC)
-                            .returns(TypeName.VOID)
-                            .addParameter(parameter)
-                            .build()
-                    ).build()
+                    .addMethod(anonymousClassMethod.build()).build()
 
             initLauncherMethod.addStatement(
                 "\$T<\$T> \$L = \$L.registerForActivityResult(new \$T.StartActivityForResult(),\$L)",
                 ACTIVITY_RESULT_LAUNCHER.java,
                 INTENT.java,
-                METHOD_NAME + methodCall.methodKey.firstCapital(),
+                METHOD_NAME + field.name.firstCapital(),
                 TARGET_VARIABLE_NAME,
                 ACTIVITY_RESULT_CONTRACTS.java,
                 activityResult
@@ -64,13 +95,11 @@ class LauncherCallBuilder(private val launcherActivityClass: LauncherActivityCla
             initLauncherMethod.addStatement(
                 "\$L.\$L = \$L",
                 TARGET_VARIABLE_NAME,
-                methodCall.methodKey,
-                METHOD_NAME + methodCall.methodKey.firstCapital()
+                field.name,
+                METHOD_NAME + field.name.firstCapital()
             )
 
             typeBuilder.addMethod(initLauncherMethod.build())
-
         }
-
     }
 }

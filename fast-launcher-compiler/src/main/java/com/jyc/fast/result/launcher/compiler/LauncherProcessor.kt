@@ -78,15 +78,21 @@ class LauncherProcessor : AbstractProcessor() {
             .filter { it.kind == ElementKind.METHOD }
             .forEach { element ->
                 try {
-                    launcherActivityClasses[element.enclosingElement]?.methodCalls?.add(
-                        MethodCall(
-                            element as ExecutableElement
-                        )
-                    )
-                        ?: Logger.error(
+
+                    if (launcherActivityClasses[element.enclosingElement]?.methodCalls == null) {
+                        Logger.error(
                             element,
                             "Method $element annotated as Required while ${element.enclosingElement} not annotated"
                         )
+                    }
+
+                    val methodCall = MethodCall(
+                        element as ExecutableElement
+                    )
+
+                    launcherActivityClasses[element.enclosingElement]!!.addMethodCall(
+                        methodCall
+                    )
                 } catch (e: Exception) {
                     Logger.logParsingError(element, FastLauncherResult::class.java, e)
                 }

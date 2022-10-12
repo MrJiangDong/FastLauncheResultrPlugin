@@ -9,10 +9,11 @@ import javax.lang.model.element.VariableElement
 /// 描述：Field
 open class Field(private val element:VariableElement) {
 
+    open val prefix = "LAUNCHER_"
+
     val name = element.simpleName.toString()
 
     //是不是私有数据
     val isPrivate = Modifier.PRIVATE in element.modifiers
-
     //
 }
