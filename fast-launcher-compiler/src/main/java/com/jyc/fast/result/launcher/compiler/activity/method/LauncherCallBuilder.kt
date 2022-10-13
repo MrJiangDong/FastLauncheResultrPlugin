@@ -45,29 +45,31 @@ class LauncherCallBuilder(private val launcherActivityClass: LauncherActivityCla
                 .addStatement("int resultCode = result.getResultCode()")
 
             //生成控制语句
-            launcherActivityClass.resultCodes[field.name]?.forEachIndexed { index, fastResultCodes ->
+            launcherActivityClass.resultCodes[field.launcherKey]?.forEachIndexed { index, fastResultCodes ->
                 if (index == 0) {
                     anonymousClassMethod.beginControlFlow(
                         "if (resultCode == \$L)",
                         fastResultCodes.resultCode
                     )
-                    anonymousClassMethod.addStatement(
-                        "\$L.\$L()",
-                        TARGET_VARIABLE_NAME,
-                        fastResultCodes.methodName
-                    )
+                    MethodParameter(launcherActivityClass).addResultMethod(anonymousClassMethod,fastResultCodes.methodCall)
+//                    anonymousClassMethod.addStatement(
+//                        "\$L.\$L()",
+//                        TARGET_VARIABLE_NAME,
+//                        fastResultCodes.methodName
+//                    )
                 } else {
                     anonymousClassMethod.nextControlFlow(
                         "else if (resultCode == \$L)",
                         fastResultCodes.resultCode
                     )
-                    anonymousClassMethod.addStatement(
-                        "\$L.\$L()",
-                        TARGET_VARIABLE_NAME,
-                        fastResultCodes.methodName
-                    )
+                    MethodParameter(launcherActivityClass).addResultMethod(anonymousClassMethod,fastResultCodes.methodCall)
+//                    anonymousClassMethod.addStatement(
+//                        "\$L.\$L()",
+//                        TARGET_VARIABLE_NAME,
+//                        fastResultCodes.methodName
+//                    )
                 }
-                if ((index + 1) == launcherActivityClass.resultCodes[field.name]?.size) {
+                if ((index + 1) == launcherActivityClass.resultCodes[field.launcherKey]?.size) {
                     anonymousClassMethod.endControlFlow()
                 }
             }

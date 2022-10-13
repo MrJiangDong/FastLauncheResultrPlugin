@@ -3,11 +3,14 @@ package com.jyc.fast.result.launcher.compiler
 import com.bennyhuo.aptutils.AptContext
 import com.bennyhuo.aptutils.logger.Logger
 import com.bennyhuo.aptutils.types.isSubTypeOf
+import com.bennyhuo.aptutils.types.simpleName
+import com.jyc.fast.result.launcher.annotations.FastIntentData
 import com.jyc.fast.result.launcher.annotations.FastLauncher
 import com.jyc.fast.result.launcher.annotations.FastLauncherResult
 import com.jyc.fast.result.launcher.compiler.activity.LauncherActivityClass
 import com.jyc.fast.result.launcher.compiler.activity.entity.Field
 import com.jyc.fast.result.launcher.compiler.activity.entity.MethodCall
+import com.jyc.fast.result.launcher.compiler.activity.entity.ParameterBean
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.ProcessingEnvironment
 import javax.annotation.processing.RoundEnvironment
@@ -21,7 +24,7 @@ import javax.lang.model.element.*
 class LauncherProcessor : AbstractProcessor() {
 
     private val supportedAnnotations =
-        setOf(FastLauncher::class.java, FastLauncherResult::class.java)
+        setOf(FastLauncher::class.java, FastLauncherResult::class.java, FastIntentData::class.java)
 
 
     override fun getSupportedSourceVersion() = SourceVersion.RELEASE_8
@@ -95,6 +98,30 @@ class LauncherProcessor : AbstractProcessor() {
                     )
                 } catch (e: Exception) {
                     Logger.logParsingError(element, FastLauncherResult::class.java, e)
+                }
+            }
+
+        roundEnv.getElementsAnnotatedWith(FastIntentData::class.java)
+            .filter { it.kind == ElementKind.PARAMETER }
+            .forEach { element ->
+                try {
+                    val methodCall: MethodCall? =
+                        launcherActivityClasses[element.enclosingElement.enclosingElement]?.methodCalls?.get(
+                            element.enclosingElement.simpleName()
+                        )
+
+                    if (methodCall == null) {
+                        Logger.error(
+                            element,
+                            "Method $element annotated as Required while ${element.enclosingElement} not annotated"
+                        )
+                    }
+
+                    val parameterBean = ParameterBean(element as VariableElement)
+                    methodCall!!.parameterBeanList.add(parameterBean)
+
+                } catch (e: Exception) {
+                    Logger.logParsingError(element, FastIntentData::class.java, e)
                 }
             }
 

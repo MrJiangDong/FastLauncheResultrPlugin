@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.result.ActivityResultLauncher
+import com.jyc.fast.result.launcher.annotations.FastIntentData
 import com.jyc.fast.result.launcher.annotations.FastLauncher
 import com.jyc.fast.result.launcher.annotations.FastLauncherResult
 
@@ -14,10 +15,10 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    @FastLauncher
+    @FastLauncher(launcherKey = LAUNCHER_START_ACTIVITY_RESULT)
     lateinit var startActivityResult: ActivityResultLauncher<Intent>
 
-    @FastLauncher
+    @FastLauncher(launcherKey = LAUNCHER_START_PhOTO_RESULT)
     lateinit var startPhotoResult: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         launcherKey = LAUNCHER_START_ACTIVITY_RESULT,
         launcherResultCodes = [RESULT_OK,RESULT_CANCELED,]
     )
-    fun onStartActivityResult() {
+    fun onStartActivityResult(intent: Intent) {
 
     }
 

@@ -33,15 +33,15 @@ class LauncherActivityClass(val typeElement: TypeElement) {
 
     val targetTypeName: TypeName = TypeName.get(typeElement.asType())
 
-    val methodCalls = TreeMap<String,MethodCall>()
+    val methodCalls = TreeMap<String, MethodCall>()
 
     val resultCodes = HashMap<String, TreeSet<ResultCode>>()
 
-    fun addMethodCall(methodCall: MethodCall){
-        methodCalls[methodCall.methodKey] = methodCall
+    fun addMethodCall(methodCall: MethodCall) {
+        methodCalls[methodCall.methodName] = methodCall
 
         methodCall.methodResultCode.forEach {
-            val resultCode = ResultCode(it,methodCall.methodName)
+            val resultCode = ResultCode(it, methodCall)
 
             if (resultCodes[methodCall.methodKey] != null) {
                 resultCodes[methodCall.methodKey]!!.add(resultCode)
