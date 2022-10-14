@@ -4,9 +4,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.result.ActivityResultLauncher
-import com.jyc.fast.result.launcher.annotations.FastIntentData
-import com.jyc.fast.result.launcher.annotations.FastLauncher
-import com.jyc.fast.result.launcher.annotations.FastLauncherResult
+import com.jyc.fast.launcher.result.annotations.FastLauncher
+import com.jyc.fast.launcher.result.annotations.FastLauncherResult
 
 class MainActivity : AppCompatActivity() {
     companion object {
