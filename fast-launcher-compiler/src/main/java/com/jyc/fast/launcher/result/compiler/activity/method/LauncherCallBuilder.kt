@@ -6,7 +6,6 @@ import com.jyc.fast.launcher.result.compiler.activity.LauncherActivityClassBuild
 import com.jyc.fast.launcher.result.compiler.activity.LauncherActivityClassBuilder.Companion.TARGET_VARIABLE_NAME
 import com.jyc.fast.launcher.result.compiler.activity.LauncherActivityClassBuilder.Companion.TYPE_VARIABLE_NAME
 import com.jyc.fast.launcher.result.compiler.prebuilt.*
-import com.jyc.fast.result.launcher.compiler.prebuilt.*
 import com.squareup.javapoet.*
 import javax.lang.model.element.Modifier
 

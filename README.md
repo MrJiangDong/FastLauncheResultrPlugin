@@ -1,1 +1,1 @@
-# FastResultLauncherPlugin
+# FastLauncherResultPlugin
