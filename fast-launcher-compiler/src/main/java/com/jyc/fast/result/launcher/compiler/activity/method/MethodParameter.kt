@@ -4,13 +4,13 @@ import com.bennyhuo.aptutils.types.isSubTypeOf
 import com.jyc.fast.result.launcher.compiler.activity.LauncherActivityClass
 import com.jyc.fast.result.launcher.compiler.activity.LauncherActivityClassBuilder.Companion.TARGET_VARIABLE_NAME
 import com.jyc.fast.result.launcher.compiler.activity.entity.MethodCall
-import com.jyc.fast.result.launcher.compiler.activity.entity.ParameterBean
+import com.jyc.fast.result.launcher.compiler.activity.entity.ParameterAnnotation
 import com.jyc.fast.result.launcher.compiler.prebuilt.INTENT
 import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.NameAllocator
 import java.util.*
-import javax.lang.model.element.VariableElement
-import kotlin.collections.HashSet
+import javax.lang.model.type.TypeKind
+import kotlin.collections.ArrayList
 
 
 /// @author jyc
@@ -23,23 +23,23 @@ class MethodParameter(val launcherActivityClass: LauncherActivityClass) {
         methodCall: MethodCall
     ) {
         val nameAllocator = NameAllocator()
-        addNecessaryParameterVariables(
+        val parameterAnnotationList = addNecessaryParameterVariables(
             methodBuilder,
             nameAllocator,
-            methodCall.parameterBeanList,
-            methodCall.parameterList
+            methodCall
         )
+
         methodBuilder.addStatement(
             "\$L.\$L(\$L)",
             TARGET_VARIABLE_NAME,
             methodCall.methodName,
-            parameterToString(nameAllocator, methodCall.parameterBeanList)
+            parameterToString(nameAllocator,parameterAnnotationList)
         )
     }
 
     private fun parameterToString(
         nameAllocator: NameAllocator,
-        parameters: HashSet<ParameterBean>
+        parameters: ArrayList<ParameterAnnotation>
     ): String {
         val stringBuilder = StringBuilder()
         if (parameters.size > 0) {
@@ -54,20 +54,24 @@ class MethodParameter(val launcherActivityClass: LauncherActivityClass) {
     private fun addNecessaryParameterVariables(
         methodBuilder: MethodSpec.Builder,
         nameAllocator: NameAllocator,
-        parameters: HashSet<ParameterBean>,
-        parametersList: List<VariableElement>
-    ) {
-
+        methodCall: MethodCall
+    ): ArrayList<ParameterAnnotation> {
+        val parameterAnnotationList = ArrayList<ParameterAnnotation>()
+        //复制一份数据
+        parameterAnnotationList.addAll(methodCall.parameterAnnotationList)
+        val parametersList = methodCall.parameterList
         //将默认的参数添加到注解参数中
         parametersList.forEach {
-            if (it.asType().isSubTypeOf(INTENT.className())){
-                val parameterBean = ParameterBean(it)
-                parameterBean.name = "data"
-                parameters.add(parameterBean)
+            val parameterAnnotation = ParameterAnnotation(it)
+            if (it.asType().isSubTypeOf(INTENT.className())) {
+                parameterAnnotation.name = "data"
+            } else if (it.asType().kind == TypeKind.INT) {
+                parameterAnnotation.name = "resultCode"
             }
+            parameterAnnotationList.add(parameterAnnotation)
         }
 
-        parameters.forEach { parameter ->
+        parameterAnnotationList.forEach { parameter ->
             var parameterName: String
 
             parameterName = try {
@@ -78,5 +82,6 @@ class MethodParameter(val launcherActivityClass: LauncherActivityClass) {
 
         }
 
+        return parameterAnnotationList
     }
 }

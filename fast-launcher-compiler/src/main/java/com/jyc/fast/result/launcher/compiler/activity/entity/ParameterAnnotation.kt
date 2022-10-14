@@ -6,7 +6,7 @@ import javax.lang.model.element.VariableElement
 /// @author jyc
 /// 创建日期：2022/10/13
 /// 描述：Parameter
-open class ParameterBean(private val element: VariableElement) {
+open class ParameterAnnotation(private val element: VariableElement) {
 
     open var name = element.simpleName.toString()
 
@@ -32,7 +32,7 @@ open class ParameterBean(private val element: VariableElement) {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as ParameterBean
+        other as ParameterAnnotation
 
         if (element != other.element) return false
         if (name != other.name) return false

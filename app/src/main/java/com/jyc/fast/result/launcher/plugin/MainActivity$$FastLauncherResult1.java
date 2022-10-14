@@ -44,7 +44,7 @@ public class MainActivity$$FastLauncherResult1<Host extends MainActivity> {
 
 
             if (resultCode == Activity.RESULT_OK) {
-                host.onStartActivityResult(data);
+                host.onStartActivityResult(data,resultCode);
             }
         }
     }

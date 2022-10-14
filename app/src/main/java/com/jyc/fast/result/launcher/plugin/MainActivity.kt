@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         launcherKey = LAUNCHER_START_ACTIVITY_RESULT,
         launcherResultCodes = [RESULT_OK,RESULT_CANCELED,]
     )
-    fun onStartActivityResult(intent: Intent) {
+    fun onStartActivityResult(intent: Intent,resultCode:Int) {
 
     }
 

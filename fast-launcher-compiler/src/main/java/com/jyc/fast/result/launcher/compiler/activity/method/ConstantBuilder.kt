@@ -1,6 +1,6 @@
 package com.jyc.fast.result.launcher.compiler.activity.method
 
-import com.jyc.annotations.compiler.utils.cameToUnderline
+import com.jyc.fast.result.launcher.compiler.utils.cameToUnderline
 import com.jyc.fast.result.launcher.compiler.activity.LauncherActivityClass
 import com.squareup.javapoet.FieldSpec
 import com.squareup.javapoet.TypeSpec

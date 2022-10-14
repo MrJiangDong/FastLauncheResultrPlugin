@@ -1,9 +1,8 @@
 package com.jyc.fast.result.launcher.compiler.activity.entity
 
 import com.jyc.fast.result.launcher.annotations.FastLauncherResult
-import java.util.*
 import javax.lang.model.element.ExecutableElement
-import kotlin.collections.HashSet
+import kotlin.collections.ArrayList
 
 
 /// @author jyc
@@ -18,7 +17,7 @@ class MethodCall(private val element: ExecutableElement) {
 
     val methodResultCode = element.getAnnotation(FastLauncherResult::class.java).launcherResultCodes
 
-    val parameterBeanList = HashSet<ParameterBean>()
+    val parameterAnnotationList = ArrayList<ParameterAnnotation>()
 
     val parameterList = element.parameters
 //    val methodResultCode = element.parameters[1]

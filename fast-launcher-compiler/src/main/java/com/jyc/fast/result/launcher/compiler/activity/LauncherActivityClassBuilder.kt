@@ -26,10 +26,6 @@ class LauncherActivityClassBuilder(private val launcherActivityClass: LauncherAc
             .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
             .addTypeVariable(TypeVariableName.get(TYPE_VARIABLE_NAME,launcherActivityClass.targetTypeName))
 
-
-//        val activityResult: ParameterSpec = ParameterSpec.builder(ACTIVITY_RESULT.java, "result")
-//            .addModifiers(Modifier.FINAL)
-//            .build()
         //创建方法
         ConstantBuilder(launcherActivityClass).build(typeBuilder)
         LauncherCallBuilder(launcherActivityClass).build(typeBuilder)

@@ -10,12 +10,14 @@ import com.jyc.fast.result.launcher.annotations.FastLauncherResult
 import com.jyc.fast.result.launcher.compiler.activity.LauncherActivityClass
 import com.jyc.fast.result.launcher.compiler.activity.entity.Field
 import com.jyc.fast.result.launcher.compiler.activity.entity.MethodCall
-import com.jyc.fast.result.launcher.compiler.activity.entity.ParameterBean
+import com.jyc.fast.result.launcher.compiler.activity.entity.ParameterAnnotation
+import com.jyc.fast.result.launcher.compiler.prebuilt.INTENT
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.ProcessingEnvironment
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.*
+import javax.lang.model.type.TypeKind
 
 
 /// @author jyc
@@ -93,6 +95,19 @@ class LauncherProcessor : AbstractProcessor() {
                         element as ExecutableElement
                     )
 
+                    if ( methodCall.parameterList.size >2){
+                        Logger.error(
+                            element,
+                            "Method $element only supported intent and resultCode"
+                        )
+                    }
+
+                    methodCall.parameterList.forEach {
+                        if (!(it.asType().isSubTypeOf(INTENT.className())) && (it.asType().kind != TypeKind.INT)){
+                            Logger.error(element,"${methodCall.methodName} has unsupported parameters")
+                        }
+                    }
+
                     launcherActivityClasses[element.enclosingElement]!!.addMethodCall(
                         methodCall
                     )
@@ -117,8 +132,8 @@ class LauncherProcessor : AbstractProcessor() {
                         )
                     }
 
-                    val parameterBean = ParameterBean(element as VariableElement)
-                    methodCall!!.parameterBeanList.add(parameterBean)
+                    val parameterAnnotation = ParameterAnnotation(element as VariableElement)
+                    methodCall!!.parameterAnnotationList.add(parameterAnnotation)
 
                 } catch (e: Exception) {
                     Logger.logParsingError(element, FastIntentData::class.java, e)
