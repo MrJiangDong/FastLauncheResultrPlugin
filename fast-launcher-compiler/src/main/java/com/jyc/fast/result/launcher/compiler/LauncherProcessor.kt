@@ -1,9 +1,9 @@
 package com.jyc.fast.result.launcher.compiler
 
-import com.bennyhuo.aptutils.AptContext
-import com.bennyhuo.aptutils.logger.Logger
-import com.bennyhuo.aptutils.types.isSubTypeOf
-import com.bennyhuo.aptutils.types.simpleName
+import com.jyc.fast.result.launcher.compiler.aptutils.AptContext
+import com.jyc.fast.result.launcher.compiler.aptutils.logger.Logger
+import com.jyc.fast.result.launcher.compiler.aptutils.types.isSubTypeOf
+import com.jyc.fast.result.launcher.compiler.aptutils.types.simpleName
 import com.jyc.fast.result.launcher.annotations.FastIntentData
 import com.jyc.fast.result.launcher.annotations.FastLauncher
 import com.jyc.fast.result.launcher.annotations.FastLauncherResult

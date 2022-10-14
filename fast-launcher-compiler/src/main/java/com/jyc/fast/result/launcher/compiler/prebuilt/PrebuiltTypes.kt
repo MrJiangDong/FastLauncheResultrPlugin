@@ -1,6 +1,6 @@
 package com.jyc.fast.result.launcher.compiler.prebuilt
 
-import com.bennyhuo.aptutils.types.ClassType
+import com.jyc.fast.result.launcher.compiler.aptutils.types.ClassType
 
 
 /// @author jyc

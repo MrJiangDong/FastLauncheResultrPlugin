@@ -16,4 +16,3 @@ rootProject.name = "FastResultLauncherPlugin"
 include ':app'
 include ':fast-launcher-annotations'
 include ':fast-launcher-compiler'
-include ':aptutils'

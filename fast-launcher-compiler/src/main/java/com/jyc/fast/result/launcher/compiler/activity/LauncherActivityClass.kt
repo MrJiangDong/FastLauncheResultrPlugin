@@ -1,7 +1,7 @@
 package com.jyc.fast.result.launcher.compiler.activity
 
-import com.bennyhuo.aptutils.types.packageName
-import com.bennyhuo.aptutils.types.simpleName
+import com.jyc.fast.result.launcher.compiler.aptutils.types.packageName
+import com.jyc.fast.result.launcher.compiler.aptutils.types.simpleName
 import com.jyc.fast.result.launcher.compiler.activity.entity.ResultCode
 import com.jyc.fast.result.launcher.compiler.activity.entity.Field
 import com.jyc.fast.result.launcher.compiler.activity.entity.MethodCall

@@ -1,6 +1,6 @@
 package com.jyc.fast.result.launcher.compiler.activity.method
 
-import com.jyc.fast.result.launcher.compiler.utils.firstCapital
+import com.jyc.fast.result.launcher.compiler.aptutils.utils.firstCapital
 import com.jyc.fast.result.launcher.compiler.activity.LauncherActivityClass
 import com.jyc.fast.result.launcher.compiler.activity.LauncherActivityClassBuilder.Companion.METHOD_NAME
 import com.jyc.fast.result.launcher.compiler.activity.LauncherActivityClassBuilder.Companion.TARGET_VARIABLE_NAME
